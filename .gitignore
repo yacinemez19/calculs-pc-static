@@ -1,0 +1,12 @@
+# Fichiers macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Dossiers temporaires
+tmp/
+temp/
+
+*.md
+*.txt

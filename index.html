@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Devis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Page 1: Configuration de l'Étude -->
+        <div id="page1" class="page active">
+            <h1>Configuration de l'Étude</h1>
+            <form id="configForm">
+                <div>
+                    <label for="study_name">Nom de l'étude :</label>
+                    <input type="text" id="study_name" name="study_name" required>
+                </div>
+                <div>
+                    <label for="num_phases">Nombre de phases :</label>
+                    <input type="number" id="num_phases" name="num_phases" min="1" required>
+                </div>
+                <button type="submit">Suivant</button>
+            </form>
+        </div>
+
+        <!-- Page 2: Détails des Phases -->
+        <div id="page2" class="page">
+            <h1>Détails des Phases pour l'étude : <span id="study_name_display"></span></h1>
+            <form id="detailsForm">
+                <table id="phasesTable">
+                    <thead>
+                        <tr>
+                            <th>Phase #</th>
+                            <th>Nombre de JEH</th>
+                            <th>Prix du JEH (€)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="phasesTableBody">
+                        <!-- Les phases seront générées dynamiquement -->
+                    </tbody>
+                </table>
+
+                <h2>Frais, TVA et Acompte</h2>
+                <div>
+                    <label for="frais_type">Type de Frais HT :</label>
+                    <select name="frais_type" id="frais_type">
+                        <option value="percentage" selected>Pourcentage (%)</option>
+                        <option value="amount">Montant Fixe (€)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="frais_value">Valeur des Frais HT :</label>
+                    <input type="number" id="frais_value" name="frais_value" step="0.01" value="5.00" min="0" required>
+                </div>
+                <div>
+                    <label for="taux_tva">Taux de TVA (%) :</label>
+                    <input type="number" id="taux_tva" name="taux_tva" step="0.01" value="20.00" min="0" required>
+                </div>
+                <div>
+                    <label for="pourcentage_acompte">Pourcentage d'acompte (%) :</label>
+                    <input type="number" id="pourcentage_acompte" name="pourcentage_acompte" step="0.01" value="40.00" min="0" max="100" required>
+                </div>
+                
+                <button type="submit">Générer le Devis</button>
+            </form>
+        </div>
+
+        <!-- Page 3: Résultats -->
+        <div id="page3" class="page">
+            <h1>Devis pour l'étude : <span id="results_study_name"></span></h1>
+
+            <h2>Détail par Phase :</h2>
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Phase #</th>
+                        <th>Nombre de JEH</th>
+                        <th>Prix du JEH</th>
+                        <th>Prix HT Phase</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTableBody">
+                    <!-- Les résultats seront générés dynamiquement -->
+                </tbody>
+            </table>
+
+            <h2>Récapitulatif Global :</h2>
+            <div class="summary-section">
+                <h3>Prestation Totale :</h3>
+                <p><strong>Nombre total de JEH :</strong> <span id="total_jeh_global"></span></p>
+                <p><strong>Prestation HT :</strong> <span id="prestation_ht_global"></span> €</p>
+                <p><em>En lettres : <span id="prestation_ht_global_words"></span></em></p>
+            </div>
+
+            <div class="summary-section">
+                <h3>Frais :</h3>
+                <p id="frais_display"></p>
+                <p><em>En lettres : <span id="frais_ht_words"></span></em></p>
+            </div>
+
+            <div class="summary-section">
+                <h3>Total HT Global :</h3>
+                <p><strong>Total HT (Prestation + Frais) :</strong> <span id="total_ht"></span> €</p>
+                <p><em>En lettres : <span id="total_ht_words"></span></em></p>
+            </div>
+
+            <div class="summary-section">
+                <h3>TVA :</h3>
+                <p><strong>Taux de TVA :</strong> <span id="taux_tva_display"></span> %</p>
+                <p><strong>Montant Global TVA :</strong> <span id="tva_amount"></span> €</p>
+                <p><em>En lettres : <span id="tva_amount_words"></span></em></p>
+            </div>
+
+            <div class="summary-section total-final">
+                <h3>Total TTC Global :</h3>
+                <p><strong>Prix Total TTC :</strong> <span id="total_ttc"></span> €</p>
+                <p><em>En lettres : <span id="total_ttc_words"></span></em></p>
+            </div>
+
+            <h2>Échéancier de Paiement (Acompte <span id="pourcentage_acompte_display"></span>%)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Libellé</th>
+                        <th>Date</th>
+                        <th>Frais HT (€)</th>
+                        <th>Prestation HT (€)</th>
+                        <th>Montant HT (€)</th>
+                        <th>Montant TVA (€)</th>
+                        <th>Montant TTC (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Facture d'acompte</td>
+                        <td></td>
+                        <td id="acompte_frais_ht"></td>
+                        <td id="acompte_prestation_ht"></td>
+                        <td id="acompte_montant_ht"></td>
+                        <td id="acompte_tva_amount"></td>
+                        <td id="acompte_montant_ttc"></td>
+                    </tr>
+                    <tr>
+                        <td>Facture de solde</td>
+                        <td></td>
+                        <td id="solde_frais_ht"></td>
+                        <td id="solde_prestation_ht"></td>
+                        <td id="solde_montant_ht"></td>
+                        <td id="solde_tva_amount"></td>
+                        <td id="solde_montant_ttc"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button onclick="resetApp()" class="button">Nouvelle étude</button>
+        </div>
+    </div>
+
+    <script src="numberToWords.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+

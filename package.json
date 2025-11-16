@@ -1,0 +1,19 @@
+{
+  "name": "calculateur-devis-statique",
+  "version": "1.0.0",
+  "description": "Application statique de calcul de devis",
+  "scripts": {
+    "start": "npx http-server -p 8000 -o",
+    "dev": "npx http-server -p 8000"
+  },
+  "keywords": [
+    "devis",
+    "calculateur",
+    "static",
+    "html",
+    "javascript"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+

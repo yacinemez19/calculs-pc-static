@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Conversion de nombres en lettres</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 3px solid #3498db;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        input {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        #result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test de la conversion de nombres en lettres</h1>
+        
+        <h2>Tests prédéfinis</h2>
+        <div id="predefined-tests"></div>
+        
+        <h2>Test personnalisé</h2>
+        <div>
+            <input type="number" id="custom-number" placeholder="Entrez un nombre" step="0.01">
+            <button onclick="testCustomNumber()">Tester</button>
+        </div>
+        <div id="result"></div>
+        
+        <h2>Tester l'application complète</h2>
+        <p><a href="index.html" style="color: #3498db; text-decoration: none;">➜ Ouvrir le calculateur de devis</a></p>
+    </div>
+
+    <script src="numberToWords.js"></script>
+    <script>
+        // Tests prédéfinis
+        const testCases = [
+            { number: 0, expected: "zéro" },
+            { number: 1, expected: "un" },
+            { number: 10, expected: "dix" },
+            { number: 17, expected: "dix-sept" },
+            { number: 21, expected: "vingt et un" },
+            { number: 30, expected: "trente" },
+            { number: 45, expected: "quarante-cinq" },
+            { number: 71, expected: "soixante et onze" },
+            { number: 80, expected: "quatre-vingts" },
+            { number: 81, expected: "quatre-vingt-un" },
+            { number: 91, expected: "quatre-vingt-onze" },
+            { number: 100, expected: "cent" },
+            { number: 200, expected: "deux cents" },
+            { number: 450, expected: "quatre cent cinquante" },
+            { number: 1000, expected: "mille" },
+            { number: 2500, expected: "deux mille cinq cents" }
+        ];
+        
+        function runPredefinedTests() {
+            const container = document.getElementById('predefined-tests');
+            let html = '';
+            
+            testCases.forEach(test => {
+                const result = numberToWords(test.number);
+                const match = result === test.expected;
+                const icon = match ? '✅' : '❌';
+                
+                html += `
+                    <div class="test-case">
+                        ${icon} <strong>${test.number}</strong> → "${result}"
+                        ${!match ? `<br><small>Attendu: "${test.expected}"</small>` : ''}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function testCustomNumber() {
+            const input = document.getElementById('custom-number');
+            const num = parseFloat(input.value);
+            const resultDiv = document.getElementById('result');
+            
+            if (isNaN(num)) {
+                resultDiv.textContent = '⚠️ Veuillez entrer un nombre valide';
+                return;
+            }
+            
+            const integerPart = Math.floor(num);
+            const decimalPart = Math.round((num - integerPart) * 100);
+            
+            let words = numberToWords(integerPart) + ' euro' + (integerPart > 1 ? 's' : '');
+            
+            if (decimalPart > 0) {
+                words += ' et ' + numberToWords(decimalPart) + ' centimes';
+            }
+            
+            words = words.charAt(0).toUpperCase() + words.slice(1);
+            
+            resultDiv.textContent = `${num} → ${words}`;
+        }
+        
+        // Lancer les tests au chargement
+        runPredefinedTests();
+    </script>
+</body>
+</html>
+
